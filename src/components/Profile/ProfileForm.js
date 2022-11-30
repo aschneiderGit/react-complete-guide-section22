@@ -1,4 +1,5 @@
 import {useContext, useRef} from 'react';
+import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 import {FIREBASE_API_KEY} from '../../utils/firebase';
 import classes from './ProfileForm.module.css';
@@ -6,6 +7,7 @@ import classes from './ProfileForm.module.css';
 const ProfileForm = () => {
 	const newPwdEntered = useRef();
 	const authCtx = useContext(AuthContext);
+	const history = useHistory();
 
 	const changePwdHandler = (event) => {
 		event.preventDefault();
@@ -24,6 +26,7 @@ const ProfileForm = () => {
 		).then((res) => {
 			if (!res.ok) {
 				console.log(res);
+				history.replace('./');
 			}
 		});
 	};
