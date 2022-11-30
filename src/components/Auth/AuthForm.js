@@ -18,34 +18,40 @@ const AuthForm = () => {
 
 		const enteredEmail = emailInputRef.current.value;
 		const enteredPassword = pwdInputRef.current.value;
+		let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
 		if (isLogin) {
-		} else {
-			fetch(
-				'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-					FIREBASE_API_KEY,
-				{
-					method: 'POST',
-					body: JSON.stringify({
-						email: enteredEmail,
-						password: enteredPassword,
-						returnSecureToken: true,
-					}),
-				}
-			).then((res) => {
+			url =
+				'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
+		}
+		fetch(url + FIREBASE_API_KEY, {
+			method: 'POST',
+			body: JSON.stringify({
+				email: enteredEmail,
+				password: enteredPassword,
+				returnSecureToken: true,
+			}),
+		})
+			.then((res) => {
 				setIsLoading(false);
 				if (res.ok) {
+					return res.json();
 				} else {
-					res.json().then((data) => {
-						console.log(data);
+					return res.json().then((data) => {
 						let errorMessage = 'Create Account Fail';
 						if (data && data.error && data.error.message) {
 							errorMessage = data.error.message;
 						}
-						alert(errorMessage);
+						throw new Error(errorMessage);
 					});
 				}
+			})
+			.then((data) => {
+				console.log(data);
+			})
+			.catch((err) => {
+				console.log('here');
+				alert(err.message);
 			});
-		}
 	};
 
 	return (
