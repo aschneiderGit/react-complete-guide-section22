@@ -52,11 +52,14 @@ const AuthForm = () => {
 				}
 			})
 			.then((data) => {
-				authCtx.login(data.idToken);
+				const expirationTime = new Date(
+					new Date().getTime() + +data.expiresIn * 1000
+				);
+				console.log(expirationTime);
+				authCtx.login(data.idToken, expirationTime.toISOString());
 				history.replace('./');
 			})
 			.catch((err) => {
-				console.log('here');
 				alert(err.message);
 			});
 	};
