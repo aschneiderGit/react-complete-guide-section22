@@ -1,4 +1,5 @@
-import {useRef, useState} from 'react';
+import {useContext, useRef, useState} from 'react';
+import AuthContext from '../../store/auth-context';
 import {FIREBASE_API_KEY} from '../../utils/firebase';
 
 import classes from './AuthForm.module.css';
@@ -8,6 +9,9 @@ const AuthForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const emailInputRef = useRef();
 	const pwdInputRef = useRef();
+
+	const authCtx = useContext(AuthContext);
+
 	const switchAuthModeHandler = () => {
 		setIsLogin((prevState) => !prevState);
 	};
@@ -46,7 +50,7 @@ const AuthForm = () => {
 				}
 			})
 			.then((data) => {
-				console.log(data);
+				authCtx.login(data.idToken);
 			})
 			.catch((err) => {
 				console.log('here');
